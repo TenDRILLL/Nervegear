@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset = "UTF-8">
+    <title>Test application</title>
+    <link rel="stylesheet" href="../other/index.css">
+    <script defer src="../js/index.js"></script>
+    <script defer src="../js/background.js"></script>
+</head>
+
+<body>
+<canvas id="canvas"></canvas>
+<div id="alert">
+    <img src="../images/alert.png" />
+    <center>
+        <p id="alert-text">There's an update!<br>Open?</p>
+    </center>
+    <input type="image" src="../images/ok_normal.png" id="alert-ok" />
+    <input type="image" src="../images/cancel_normal.png" id="alert-cancel" />
+</div>
+<div id="content">
+    <center>
+        <img src="../images/nvgl.png" id="nvgl"/>
+        <p id="gameName">In System Menu</p>
+        <div id="gameDiv">
+            <button id="selBtn" class="btn btn-blue">Loading...</button>
+            <div class="arrow-left">
+                <img src="../images/arrow.png" id="arrow"/>
+            </div>
+            <div id="subItemsDiv">
+                <div class="subItems" id="0">
+                    <div class="subItemTitle" id="subItemTitle0">Sword Art Online</div>
+                </div>
+                <div class="subItems" id="1">
+                    <div class="subItemTitle" id="subItemTitle1">Gun Gale Online</div>
+                </div>
+                <div class="subItems" id="2">
+                    <div class="subItemTitle" id="subItemTitle2">ALfheim Online</div>
+                </div>
+                <div class="subItems" id="3">
+                    <div class="subItemTitle" id="subItemTitle3">Underworld</div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <button id="startBtn" class="btn btn-gray">Start</button>
+        <input type="text" id="gameTxt-1" value="Title"/>
+        <input type="text" id="gameTxt-2" value="Description"/>
+    </center>
+    <div class="latest">
+        <h2 id="latest-txt">You are running the latest version.</h2>
+    </div>
+    <input type="image" src="../images/logout_hover.png" id="logoutBtn"/>
+</div>
+</body>
+</html>

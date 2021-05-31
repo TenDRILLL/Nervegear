@@ -1,0 +1,18 @@
+{
+  "name": "Nervegear",
+  "version": "2.2.8c",
+  "description": "Small Discord RPC application which parodies Sword Art Online.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "run": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ten#0010",
+  "license": "ISC",
+  "dependencies": {
+    "discord-rpc": "^3.2.0",
+    "electron": "^11.4.1"
+  },
+  "repository": "github:TenDRILLL/Nervegear"
+}
