@@ -17,7 +17,7 @@ const rpcTxt2 = document.getElementById("gameTxt-2");
 
 const { remote, ipcRenderer, shell } = require("electron");
 const { Menu, app } = remote;
-document.title = app.name + " " + app.version;
+document.title = app.name + " " + require("../package.json").version;
 
 let timeouts = [];
 

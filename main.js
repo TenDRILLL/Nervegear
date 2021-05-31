@@ -7,19 +7,19 @@ const rpcM = require("discord-rpc");
 const rpc = new rpcM.Client({transport: "ipc"});
 const https = require("https");
 let startTime; let confirm = 0;
-app.name = "Nervegear";
-app.version = "2.2.8c";
+let appName = require("./package.json").name;
+let appVersion = require("./package.json").version;
 const client_id = "785953967129493516";
 const Window = require("./js/window.js");
 const games = require("./js/games.js");
 let currentStatus;
 
-console.log("\nBooting up Nervegear v" + app.version + "...\n");
+console.log("\nBooting up Nervegear v" + appVersion + "...\n");
 console.log("   ____  ___  ______   _____  ____ ____  ____ ______" +
     "\n  / __ \\/ _ \\/ ___/ | / / _ \\/ __ `/ _ \\/ __ `/ ___/" +
     "\n / / / /  __/ /   | |/ /  __/ /_/ /  __/ /_/ / /" +
     "\n/_/ /_/\\___/_/    |___/\\___/\\__, /\\___/\\__,_/_/" +
-    "\n                           /____/                     " + app.version);
+    "\n                           /____/                     " + appVersion);
 console.log(" ~Developed by: Ten#0010");
 console.log("\nThe fact you can read this, either means you're browsing the source" +
     "\nor ran this executable from a terminal... Why would you do that?");
@@ -47,7 +47,7 @@ function render(window){
                     type: "separator"
                 },
                 {
-                    label: app.name + " " + app.version,
+                    label: appName + " " + appVersion,
                     enabled: false
                 },
                 {
@@ -204,14 +204,14 @@ function checkForUpdates(window,init){
             newVersion += data;
         });
         res.on('end', ()=>{
-            if(newVersion.split("\n")[0] === app.version){
+            if(newVersion.split("\n")[0] === appVersion){
                 if(init){
-                    console.log("Nervegear " + app.version + " loaded.");
+                    console.log("Nervegear " + appVersion + " loaded.");
                 } else {
                     window.webContents.send("update",false);
                 }
             } else {
-                console.log("Update available " + app.version + " -> " + newVersion.split("\n")[0]);
+                console.log("Update available " + appVersion + " -> " + newVersion.split("\n")[0]);
                 window.webContents.send("update",true);
             }
         });
