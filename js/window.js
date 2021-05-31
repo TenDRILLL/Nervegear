@@ -11,7 +11,8 @@ const defaultProps = {
     icon: "./nvg.ico",
     webPreferences:{
         nodeIntegration: true,
-        enableRemoteModule: true
+        enableRemoteModule: true,
+        contextIsolation: false
     }
 };
 class Window extends BrowserWindow {
