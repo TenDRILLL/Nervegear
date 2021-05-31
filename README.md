@@ -35,9 +35,11 @@ Should you wish to contribute to the application, you may fork this repository a
 
 Dependancies:
 ```
-discord-rpc     - Library to connect with a locally running Discord desktop client.
-electron        - Library that renders the GUI.
-(nexe)          - Library that compiles the executable, not required but is used here.
+discord-rpc                 - Library to connect with a locally running Discord desktop client.
+electron                    - Library that renders the GUI.
+
+Optional dependancies:
+electron-builder            - OPTIONAL: Library that compiles the executable.
 ```
 
 Do note I will not approve any changes that are not "canon" with Nervegear,
