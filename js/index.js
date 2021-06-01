@@ -5,26 +5,18 @@
 
 const selectbutton = document.getElementById("selBtn");
 const startbutton = document.getElementById("startBtn");
-const gameNameField = document.getElementById("gameName");
-const gameDiv = document.getElementById("subItemsDiv");
 const logoutBtn = document.getElementById("logoutBtn");
-
+const gameDiv = document.getElementById("subItemsDiv");
+const gameNameField = document.getElementById("gameName");
 const alertOk = document.getElementById("alert-ok");
 const alertCancel = document.getElementById("alert-cancel");
-
 const rpcTxt1 = document.getElementById("gameTxt-1");
 const rpcTxt2 = document.getElementById("gameTxt-2");
-
+const subItemsArr = [document.getElementById("0"),document.getElementById("1"),document.getElementById("arrow"),document.getElementById("2"),document.getElementById("3")];
 const { remote, ipcRenderer, shell } = require("electron");
-const { Menu, app } = remote;
+const { app } = remote;
 document.title = app.name + " " + require("../package.json").version;
-
-let timeouts = [];
-
-let inApp = false;
-let tempID = 0;
-let game;
-let showingGames = false;
+let timeouts = [], inApp = false, tempID = 0, game, showingGames = false;
 
 selected(0,"Choose game");
 
@@ -40,60 +32,19 @@ selectbutton.onclick = (e)=>{
 function toggleShowing(){
     if(showingGames){
         gameDiv.style.display = "none";
-        document.getElementById("0").animate([
-            { opacity: '1'},
-            { opacity: '0'}
-        ],{duration: 0, fill: "forwards"});
-        document.getElementById("1").animate([
-            { opacity: '1'},
-            { opacity: '0'}
-        ],{duration: 0, fill: "forwards"});
-        document.getElementById("arrow").animate([
-            { opacity: '1'},
-            { opacity: '0'}
-        ],{duration: 0, fill: "forwards"});
-        document.getElementById("2").animate([
-            { opacity: '1'},
-            { opacity: '0'}
-        ],{duration: 0, fill: "forwards"});
-        document.getElementById("3").animate([
-            { opacity: '1'},
-            { opacity: '0'}
-        ],{duration: 0, fill: "forwards"});
-        timeouts.forEach(x => {
-            clearTimeout(x);
+        subItemsArr.forEach(si => {
+            si.animate([{ opacity: '1'}, { opacity: '0'}],{duration: 0, fill: "forwards"});
         });
+        timeouts.forEach(x => {clearTimeout(x);});
     } else {
         gameDiv.style.display = "inline-block";
-        document.getElementById("0").animate([
-            { opacity: '0'},
-            { opacity: '1'}
-        ],{duration: 250, fill: "forwards"});
-        let time1 = setTimeout(()=>{
-            document.getElementById("1").animate([
-                { opacity: '0'},
-                { opacity: '1'}
-            ],{duration: 250, fill: "forwards"});
-        },80);
-        let time2 = setTimeout(()=>{
-            document.getElementById("arrow").animate([
-                { opacity: '0'},
-                { opacity: '1'}
-            ],{duration: 250, fill: "forwards"});
-        },80);
-        let time3 = setTimeout(()=>{
-            document.getElementById("2").animate([
-                { opacity: '0'},
-                { opacity: '1'}
-            ],{duration: 250, fill: "forwards"});
-        },160);
-        let time4 = setTimeout(()=>{
-            document.getElementById("3").animate([
-                { opacity: '0'},
-                { opacity: '1'}
-            ],{duration: 250, fill: "forwards"});
-        },240);
-        timeouts = [time1,time2,time3,time4];
+        for(let i = 0; i < 5; i++){
+            if(i === 2){
+                timeouts.push(setTimeout(()=>{subItemsArr[i].animate([{ opacity: '0'}, { opacity: '1'}],{duration: 250, fill: "forwards"});},80));
+            } else {
+                timeouts.push(setTimeout(()=>{subItemsArr[i].animate([{ opacity: '0'}, { opacity: '1'}],{duration: 250, fill: "forwards"});},80*i));
+            }
+        }
     }
     showingGames = !showingGames;
 }
