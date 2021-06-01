@@ -1,7 +1,7 @@
 # Nervegear
 A Discord Rich Presence application that parodies the anime Sword Art Online.
 
-###Current target operating system: _WINDOWS_
+### Current target operating system: _WINDOWS_
 
 I give no support for other operating systems.
 
