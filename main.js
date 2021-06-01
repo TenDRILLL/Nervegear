@@ -6,13 +6,12 @@ const {app, Menu, ipcMain, dialog, shell} = require("electron");
 const rpcM = require("discord-rpc");
 const rpc = new rpcM.Client({transport: "ipc"});
 const https = require("https");
-let startTime; let confirm = 0;
-let appName = require("./package.json").name;
-let appVersion = require("./package.json").version;
+const appName = require("./package.json").name;
+const appVersion = require("./package.json").version;
 const client_id = "785953967129493516";
 const Window = require("./js/window.js");
 const games = require("./js/games.js");
-let currentStatus;
+let startTime, confirm = 0, currentStatus;
 
 console.log("\nBooting up Nervegear v" + appVersion + "...\n");
 console.log("   ____  ___  ______   _____  ____ ____  ____ ______" +
@@ -24,91 +23,12 @@ console.log(" ~Developed by: Ten#0010");
 console.log("\nThe fact you can read this, either means you're browsing the source" +
     "\nor ran this executable from a terminal... Why would you do that?");
 
-rpc.once("ready", ()=>{
-    startTime = new Date();
-    renderLoad();
-});
-
-function render(window){
-    window.loadFile("./html/index.html");
-    let tmp = [
-        {
-            label: "NVG-Menu",
-            submenu: [
-                {
-                    label: "Check for updates",
-                    click: ()=>{checkForUpdates(window);}
-                },
-                {
-                    label: "Open repository",
-                    click: ()=>{shell.openExternal("https://github.com/TenDRILLL/Nervegear");}
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    label: appName + " " + appVersion,
-                    enabled: false
-                },
-                {
-                    label: "Created by Ten#0010",
-                    enabled: false
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    label: "Exit",
-                    click: ()=>{app.quit();}
-                }
-            ]
-        }/*, //This is mainly for development and debugging purposes, shouldn't be present on a public build.
-        {
-            label: "Dev",
-            submenu: [
-                {
-                    label: "Reload",
-                    click: ()=>{window.loadFile("./html/index.html");}
-                },
-                {
-                    label: "Dev-tools",
-                    click: ()=>{window.webContents.openDevTools();}
-                }
-            ]
-        }*/
-    ];
-    let mMenu = Menu.buildFromTemplate(tmp);
-    window.setMenu(mMenu);
-    rpcMenu();
-    checkForUpdates(window,true);
-}
-
-function renderLoad(){
-    if(confirm < 1) return confirm++;
-    let load = new Window({
-        file: "./html/load.html"
-    });
-    load.setMenu(null);
-    setTimeout(()=>{render(load);}, 2500);
-}
-
-function rpcMenu(){
-    currentStatus = null;
-    rpc.setActivity({
-        details: "in System Menu",
-        startTimestamp: startTime,
-        largeImageKey: "nvglogo",
-        largeImageText: "Nervegear"
-    });
-}
+rpc.once("ready", ()=>{ startTime = new Date(); renderLoad(); });
+rpc.login({ clientId: client_id });
+rpcM.register(client_id);
 
 app.once("ready", renderLoad);
-app.on("window-all-closed", ()=>{
-    app.quit();
-});
-rpc.login({ clientId: client_id });
-
-rpcM.register(client_id);
+app.on("window-all-closed", ()=>{ app.quit(); });
 
 ipcMain.on('gameChange', (e, input) =>{
     let found = false;
@@ -134,42 +54,6 @@ ipcMain.on('updateRPC',(e,input)=>{
     }
 });
 
-function startLoading(game,e){
-    let fileAmount = game.id;
-    let name = game.name;
-    let imgtxt = game.loadTxt;
-    let i = 0;
-    let loop = setInterval(()=>{
-        if(i >= fileAmount){
-            clearInterval(loop);
-            gameLoaded(game);
-            e.reply("loadFinished",game);
-        } else {
-            currentStatus = null;
-            rpc.setActivity({
-                details: "loading " + name + "...",
-                state: i + " of " + fileAmount + " (" + (i/fileAmount*100).toFixed() + "%)",
-                largeImageKey: "nvgloading",
-                largeImageText: imgtxt
-            });
-        }
-        i = Math.floor(Math.random() * (parseInt(i)+100 - parseInt(i)+1) ) + parseInt(i)+1;
-    }, 180);
-}
-
-function gameLoaded(game){
-    let args = {
-        details: "playing " + game.name,
-        startTimestamp: startTime,
-        largeImageKey: game.id.toString(),
-        largeImageText: game.name,
-        smallImageKey: "nvgsmalllogo",
-        smallImageText: "Nervegear"
-    };
-    rpc.setActivity(args);
-    currentStatus = args;
-}
-
 ipcMain.on('logout', (e, input) =>{
     currentStatus = null;
     rpc.setActivity({
@@ -189,27 +73,98 @@ ipcMain.on('logout', (e, input) =>{
             smallImageText: "Nervegear"
         });
     },3500);
-
     setTimeout(()=>{e.reply("logout",""); rpcMenu();},5000);
 });
 
-ipcMain.on("quit",()=>{
-    app.quit();
-});
+ipcMain.on("quit",()=>{ app.quit(); });
+
+function render(window){
+    window.loadFile("./html/index.html");
+    const menu = [
+        {
+            label: "NVG-Menu",
+            submenu: [
+                {label: "Check for updates", click: ()=>{checkForUpdates(window);}},
+                {label: "Open repository", click: ()=>{shell.openExternal("https://github.com/TenDRILLL/Nervegear");}},
+                {type: "separator"},
+                {label: appName + " " + appVersion, enabled: false},
+                {label: "Created by Ten#0010", enabled: false},
+                {type: "separator"},
+                {label: "Exit", click: ()=>{app.quit();}}
+            ]
+        }/*, //This is mainly for development and debugging purposes, shouldn't be present on a public build.
+        {
+            label: "Dev",
+            submenu: [
+                {label: "Reload",click: ()=>{window.loadFile("./html/index.html");}},
+                {label: "Dev-tools",click: ()=>{window.webContents.openDevTools();}}
+            ]
+        }*/
+    ];
+    window.setMenu(Menu.buildFromTemplate(menu));
+    rpcMenu();
+    checkForUpdates(window,true);
+}
+
+function renderLoad(){
+    if(confirm < 1) return confirm++;
+    const load = new Window({ file: "./html/load.html" });
+    load.setMenu(null);
+    setTimeout(()=>{render(load);}, 2500);
+}
+
+function rpcMenu(){
+    currentStatus = null;
+    rpc.setActivity({
+        details: "in System Menu",
+        startTimestamp: startTime,
+        largeImageKey: "nvglogo",
+        largeImageText: "Nervegear"
+    });
+}
+
+function startLoading(game,e){
+    const fileAmount = game.id, name = game.name, imgtxt = game.loadTxt;
+    let i = 0;
+    const loop = setInterval(()=>{
+        if(i >= fileAmount){
+            clearInterval(loop);
+            gameLoaded(game);
+            e.reply("loadFinished",game);
+        } else {
+            currentStatus = null;
+            rpc.setActivity({
+                details: "loading " + name + "...",
+                state: i + " of " + fileAmount + " (" + (i/fileAmount*100).toFixed() + "%)",
+                largeImageKey: "nvgloading",
+                largeImageText: imgtxt
+            });
+        }
+        i = Math.floor(Math.random() * (parseInt(i)+100 - parseInt(i)+1) ) + parseInt(i)+1;
+    }, 180);
+}
+
+function gameLoaded(game){
+    const args = {
+        details: "playing " + game.name,
+        startTimestamp: startTime,
+        largeImageKey: game.id.toString(),
+        largeImageText: game.name,
+        smallImageKey: "nvgsmalllogo",
+        smallImageText: "Nervegear"
+    };
+    rpc.setActivity(args);
+    currentStatus = args;
+}
 
 function checkForUpdates(window,init){
     https.get("https://raw.githubusercontent.com/TenDRILLL/Nervegear/uwu/version.txt", res => {
         let newVersion = "";
-        res.on('data', data => {
-            newVersion += data;
-        });
+        res.on('data', data => { newVersion += data; });
         res.on('end', ()=>{
             if(newVersion.split("\n")[0] === appVersion){
-                if(init){
-                    console.log("Nervegear " + appVersion + " loaded.");
-                } else {
-                    window.webContents.send("update",false);
-                }
+                if(init){ console.log("Nervegear " + appVersion + " loaded.");
+                } else { window.webContents.send("update",false); }
             } else {
                 console.log("Update available " + appVersion + " -> " + newVersion.split("\n")[0]);
                 window.webContents.send("update",true);
@@ -220,8 +175,7 @@ function checkForUpdates(window,init){
 
 process.on("unhandledRejection", (err)=>{
     if(err.message === "RPC_CONNECTION_TIMEOUT"){
-        console.log("It would seem your Discord is out of sync with the application." +
-            "\nPlease reload Discord with CTRL+R.");
+        console.log("It would seem your Discord is out of sync with the application.\nPlease reload Discord with CTRL+R.");
         dialog.showErrorBox("RPC_CONNECTION_TIMEOUT","It would seem your Discord is out of sync with the application. Please reload Discord with CTRL+R.");
         app.quit();
     } else if(err.message === "connection closed"){
@@ -232,7 +186,5 @@ process.on("unhandledRejection", (err)=>{
         console.log("Discord not running, please start Discord.");
         dialog.showErrorBox("Couldn't connect", "Discord is not running or couldn't be detected. Please (re)start Discord.");
         app.quit();
-    } else {
-        console.log(err);
-    }
+    } else { console.log(err); }
 });
