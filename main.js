@@ -2,7 +2,7 @@
 * THE ACTUAL APPLICATION ITSELF *
 ********************************/
 
-const {app, Menu, ipcMain, dialog, shell} = require("electron");
+const {app, Menu, ipcMain, dialog, shell, Tray, nativeImage} = require("electron");
 const rpcM = require("discord-rpc");
 const rpc = new rpcM.Client({transport: "ipc"});
 const https = require("https");
@@ -86,6 +86,7 @@ function render(window){
             submenu: [
                 {label: "Check for updates", click: ()=>{checkForUpdates(window);}},
                 {label: "Open repository", click: ()=>{shell.openExternal("https://github.com/TenDRILLL/Nervegear");}},
+                {label: "Hide to tray", click: ()=>{window.hide(); trayCreator(window);}},
                 {type: "separator"},
                 {label: appName + " " + appVersion, enabled: false},
                 {label: "Created by Ten#0010", enabled: false},
@@ -96,8 +97,8 @@ function render(window){
         {
             label: "Dev",
             submenu: [
-                {label: "Reload",click: ()=>{window.loadFile("./html/index.html");}},
-                {label: "Dev-tools",click: ()=>{window.webContents.openDevTools();}}
+                {label: "Reload", click: ()=>{window.loadFile("./html/index.html");}},
+                {label: "Dev-tools", click: ()=>{window.webContents.openDevTools();}}
             ]
         }*/
     ];
@@ -122,6 +123,51 @@ function rpcMenu(){
         largeImageText: "Nervegear"
     });
 }
+
+function trayCreator(window){
+    let tray = new Tray(__dirname + "/nvg.ico");
+    tray.setContextMenu(Menu.buildFromTemplate([
+        {label: "(Re)open app", click: ()=>{window.show(); tray.destroy();}},
+        {label: "Quit", click: ()=>{app.quit();}}
+    ]));
+    tray.setToolTip("Nervegear v" + appVersion);
+    tray.on("double-click",()=>{
+        window.show();
+        tray.destroy();
+    });
+}
+
+app.once("ready", renderLoad);
+app.on("window-all-closed", ()=>{
+    app.quit();
+});
+rpc.login({ clientId: client_id });
+
+rpcM.register(client_id);
+
+ipcMain.on('gameChange', (e, input) =>{
+    let found = false;
+    games.forEach(g => {
+       if(g.id === input){
+           startLoading(g,e);
+           e.reply("gameChange",g);
+           found = true;
+       }
+    });
+    if(!found) e.reply(null);
+});
+
+ipcMain.on('updateRPC',(e,input)=>{
+    if(currentStatus !== null){
+        rpc.setActivity({
+            details: input.details ? input.details : currentStatus.details,
+            state: input.state ? input.state : currentStatus.state,
+            largeImageKey: currentStatus.largeImageKey,
+            largeImageText: currentStatus.largeImageText,
+            startTimestamp: currentStatus.startTimestamp
+        });
+    }
+});
 
 function startLoading(game,e){
     const fileAmount = game.id, name = game.name, imgtxt = game.loadTxt;
