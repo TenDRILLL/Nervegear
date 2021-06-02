@@ -79,7 +79,7 @@ function rpcMenu(){
 }
 
 function trayCreator(window){
-    let tray = new Tray("nvg.ico");
+    let tray = new Tray(__dirname + "/nvg.ico");
     tray.setContextMenu(Menu.buildFromTemplate([
         {label: "(Re)open app", click: ()=>{window.show(); tray.destroy();}},
         {label: "Quit", click: ()=>{app.quit();}}
