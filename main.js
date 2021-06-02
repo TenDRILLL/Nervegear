@@ -2,7 +2,7 @@
 * THE ACTUAL APPLICATION ITSELF *
 ********************************/
 
-const {app, Menu, ipcMain, dialog, shell} = require("electron");
+const {app, Menu, ipcMain, dialog, shell, Tray, nativeImage} = require("electron");
 const rpcM = require("discord-rpc");
 const rpc = new rpcM.Client({transport: "ipc"});
 const https = require("https");
@@ -35,45 +35,21 @@ function render(window){
         {
             label: "NVG-Menu",
             submenu: [
-                {
-                    label: "Check for updates",
-                    click: ()=>{checkForUpdates(window);}
-                },
-                {
-                    label: "Open repository",
-                    click: ()=>{shell.openExternal("https://github.com/TenDRILLL/Nervegear");}
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    label: appName + " " + appVersion,
-                    enabled: false
-                },
-                {
-                    label: "Created by Ten#0010",
-                    enabled: false
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    label: "Exit",
-                    click: ()=>{app.quit();}
-                }
+                {label: "Check for updates", click: ()=>{checkForUpdates(window);}},
+                {label: "Open repository", click: ()=>{shell.openExternal("https://github.com/TenDRILLL/Nervegear");}},
+                {label: "Hide to tray", click: ()=>{window.hide(); trayCreator(window);}},
+                {type: "separator"},
+                {label: appName + " " + appVersion, enabled: false},
+                {label: "Created by Ten#0010", enabled: false},
+                {type: "separator"},
+                {label: "Exit", click: ()=>{app.quit();}}
             ]
         }/*, //This is mainly for development and debugging purposes, shouldn't be present on a public build.
         {
             label: "Dev",
             submenu: [
-                {
-                    label: "Reload",
-                    click: ()=>{window.loadFile("./html/index.html");}
-                },
-                {
-                    label: "Dev-tools",
-                    click: ()=>{window.webContents.openDevTools();}
-                }
+                {label: "Reload", click: ()=>{window.loadFile("./html/index.html");}},
+                {label: "Dev-tools", click: ()=>{window.webContents.openDevTools();}}
             ]
         }*/
     ];
@@ -99,6 +75,19 @@ function rpcMenu(){
         startTimestamp: startTime,
         largeImageKey: "nvglogo",
         largeImageText: "Nervegear"
+    });
+}
+
+function trayCreator(window){
+    let tray = new Tray("nvg.ico");
+    tray.setContextMenu(Menu.buildFromTemplate([
+        {label: "(Re)open app", click: ()=>{window.show(); tray.destroy();}},
+        {label: "Quit", click: ()=>{app.quit();}}
+    ]));
+    tray.setToolTip("Nervegear v" + appVersion);
+    tray.on("double-click",()=>{
+        window.show();
+        tray.destroy();
     });
 }
 
