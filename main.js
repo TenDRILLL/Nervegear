@@ -89,7 +89,7 @@ function render(window){
                 {label: "Hide to tray", click: ()=>{window.hide(); trayCreator(window);}},
                 {type: "separator"},
                 {label: appName + " " + appVersion, enabled: false},
-                {label: "Created by Ten#0010", enabled: false},
+                {label: "Created by Ten#0010", click: ()=>{shell.openExternal("discord://discord.com/users/484419124433518602");}},
                 {type: "separator"},
                 {label: "Exit", click: ()=>{app.quit();}}
             ]
