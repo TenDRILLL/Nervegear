@@ -6,7 +6,7 @@
   "main": "build/main.js",
   "scripts": {
     "build": "rimraf ./build && tsc --build && copyfiles -u 1 src/html/* src/images/* src/other/* build",
-    "buildrun": "npm run build && electron .",
+    "buildrun": "npm run build && npm run run",
     "run": "electron . true",
     "dist": "electron-builder"
   },
