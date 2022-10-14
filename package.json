@@ -1,23 +1,25 @@
 {
-  "name": "Nervegear",
+  "name": "nervegear",
   "productName": "Nervegear",
   "version": "2.2.9d",
   "description": "Small Discord RPC application which parodies Sword Art Online.",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "electron .",
+    "build": "rimraf ./build && tsc --build && copyfiles -u 1 src/html/* src/images/* src/other/* build",
+    "buildrun": "npm run build && electron .",
     "run": "electron .",
-    "dist": "electron-builder",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dist": "electron-builder"
   },
   "author": "Ten#0010",
   "license": "ISC",
   "dependencies": {
-    "discord-rpc": "^3.2.0"
-  },
-  "devDependencies": {
+    "@types/node": "^18.8.5",
+    "copyfiles": "^2.4.1",
+    "discord-rpc": "^3.2.0",
     "electron": "^13.0.1",
-    "electron-builder": "^22.10.5"
+    "electron-builder": "^22.10.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.4"
   },
   "repository": "github:TenDRILLL/Nervegear",
   "build": {
