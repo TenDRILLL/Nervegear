@@ -1,10 +1,10 @@
-const canvas: HTMLCanvasElement = document.createElement("canvas");
-let stars: Array<Star> = [], speed = 40, x = 100;
+const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
+const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+const stars: Array<Star> = [], speed = 40, x = 100;
+canvas.width = 785; canvas.height = 532;
 
 function init() {
-    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
     if(!ctx) return;
-    canvas.width = 785; canvas.height = 532;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.globalCompositeOperation = "lighter";
     for (let i = 0, x = stars.length; i < x; i++) {
