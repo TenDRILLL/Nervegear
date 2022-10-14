@@ -18,7 +18,7 @@ If you're expecting a Sword Art Online game, this ain't one.
 
 `Nervegear isn't showing on my Discord!?!`
 > Make sure you have enabled the `Activity Status` from your Discord Settings.
-> [Reference](https://i.imgur.com/Vz3vnJI.png)
+> [Reference](https://i.imgur.com/TktykUR.png)
 >
 > Also make sure not to have other Applications on that could hijack the Activity.
 > 
