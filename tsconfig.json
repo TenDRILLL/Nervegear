@@ -8,7 +8,6 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
     "module": "commonjs",
-    "resolveJsonModule": true,
     "esModuleInterop": true
   },
   "include": ["src"]
