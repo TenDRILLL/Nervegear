@@ -161,13 +161,15 @@ ipcMain.on('gameChange', (event, input) =>{
 
 ipcMain.on('updateRPC',(event,input)=>{
     if(currentStatus !== null){
-        rpc.setActivity({
-            details: input.details ?? currentStatus.details,
-            state: input.state ?? currentStatus.state,
-            largeImageKey: currentStatus.largeImageKey,
-            largeImageText: currentStatus.largeImageText,
-            startTimestamp: currentStatus.startTimestamp
-        });
+        let newAct = currentStatus;
+        newAct["details"] = input.details;
+        if(input.state === ""){
+            delete newAct["state"];
+        } else {
+            newAct["state"] = input.state;
+        }
+        rpc.setActivity(newAct);
+        currentStatus = newAct;
     }
 });
 

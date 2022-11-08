@@ -28,7 +28,7 @@ selectbutton.onclick = () => {
         toggleShowing();
     } else {
         ipcRenderer.send("updateRPC",{
-            details: rpcTxt1.value,
+            details: rpcTxt1.value === "" ? `playing ${game.name}...` : rpcTxt1.value,
             state: rpcTxt2.value
         });
     }
