@@ -73,7 +73,6 @@ function toggleShowing(){
                     ],{
                         duration: 250, fill: "forwards"
                     });
-                    console.log(Date.now());
                 },i === 3 ? 80*2 : 80*i)
             );
         }
