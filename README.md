@@ -41,6 +41,10 @@ Dependancies:
 ```
 discord-rpc                 - Library to connect with a locally running Discord desktop client.
 electron                    - Library that renders the GUI.
+typescript                  - Library that compiles typescript into javascript. 
+@types/node                 - Library that contains typings for node.
+copyfiles                   - Library used to copy non-typescript files to build.
+rimraf                      - Library used to clear previously built files.
 
 Optional dependancies:
 electron-builder            - OPTIONAL: Library that compiles the executable.

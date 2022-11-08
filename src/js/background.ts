@@ -1,32 +1,29 @@
-/*************************************
-* BACKGROUND ANIMATION FOR MAIN MENU *
-*************************************/
-
-let canvas = document.getElementById("canvas")
-let ctx = canvas.getContext('2d');
-let stars = [], speed = 40, x = 100;
+const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
+const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+const stars: Array<Star> = [], speed = 40, x = 100;
 canvas.width = 785; canvas.height = 532;
 
 function init() {
+    if(!ctx) return;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.globalCompositeOperation = "lighter";
     for (let i = 0, x = stars.length; i < x; i++) {
-        let s = stars[i];
+        const star: Star = stars[i];
         ctx.fillStyle = "#fff";
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI);
+        ctx.arc(star.x, star.y, star.radius, 0, 2 * Math.PI);
         ctx.fill();
         ctx.fillStyle = 'black';
         ctx.stroke();
     }
     ctx.beginPath();
     for (let i = 0, x = stars.length; i < x; i++) {
-        let starI = stars[i];
-        ctx.moveTo(starI.x,starI.y);
+        const star: Star = stars[i];
+        ctx.moveTo(star.x,star.y);
         for (let j = 0, x = stars.length; j < x; j++) {
-            let starII = stars[j];
-            if(distance(starI, starII) < 150) {
-                ctx.lineTo(starII.x,starII.y);
+            const star2: Star = stars[j];
+            if(distance(star, star2) < 150) {
+                ctx.lineTo(star2.x,star2.y);
             }
         }
     }
@@ -37,20 +34,20 @@ function init() {
 
 function refresh() {
     for (let i = 0, x = stars.length; i < x; i++) {
-        let s = stars[i];
-        s.x += s.vx / speed;
-        s.y += s.vy / speed;
-        if (s.x < 0 || s.x > canvas.width) s.vx = -s.vx;
-        if (s.y < 0 || s.y > canvas.height) s.vy = -s.vy;
+        const star: Star = stars[i];
+        star.x += star.vx / speed;
+        star.y += star.vy / speed;
+        if (star.x < 0 || star.x > canvas.width) star.vx = -star.vx;
+        if (star.y < 0 || star.y > canvas.height) star.vy = -star.vy;
     }
 }
 
 function distance( point1, point2 ){
-    let xs; let ys;
+    let xs, ys;
     xs = point2.x - point1.x;
-    xs = xs * xs;
+    xs = xs**2;
     ys = point2.y - point1.y;
-    ys = ys * ys;
+    ys = ys**2;
     return Math.sqrt( xs + ys );
 }
 
@@ -71,3 +68,11 @@ for (let i = 0; i < x; i++) {
 }
 
 loop();
+
+class Star {
+    x: number;
+    y: number;
+    radius: number;
+    vx: number;
+    vy: number;
+}
