@@ -5,11 +5,12 @@ import Window from "./js/Window";
 import Games from "./js/Games";
 
 const clientId = "785953967129493516";
-const rpc = new Client({transport: "ipc"});
-let startTime, confirm = 0, currentStatus;
+let rpc = new Client({transport: "ipc"});
+let startTime, currentStatus, reconnectAttempts = 0;
+let reconnect: boolean = false;
 
 const productName = "Nervegear";
-const version = "2.2.11a";
+const version = "2.3.0a";
 
 const dev = process.argv[2] ?? false;
 
@@ -26,10 +27,30 @@ Booting up ${productName} v${version}...
 The fact you can read this, either means you're browsing the source
 or ran this executable from a terminal... Why would you do that?`);
 
-rpc.once("ready", ()=>{
-   startTime = new Date(); renderLoad();
-});
-rpc.login({clientId});
+rpcController(new Client({transport: "ipc"}));
+
+function rpcController(rpc2){
+    rpc2.on("connected",()=>{
+        console.log("Connected to Discord.");
+        reconnectAttempts = 0;
+        reconnect = false;
+        if(currentStatus !== null){
+            rpc.setActivity(currentStatus);
+        } else {
+            rpcMenu();
+        }
+    });
+
+    rpc2.on("disconnected",()=>{
+        reconnect = true;
+        reconnectAttempts++;
+        rpcController(new Client({transport: "ipc"}));
+    });
+
+    rpc2.login({clientId}).then(x => {
+        rpc = x;
+    });
+}
 
 function rpcMenu(){
     currentStatus = null;
@@ -77,7 +98,6 @@ app.on("window-all-closed", ()=>{
 });
 
 function renderLoad(){
-    if(confirm < 1) return confirm++;
     const window = new Window({ file: `${__dirname}/html/load.html` });
     window.setMenu(null);
     setTimeout(()=>{render(window);}, 2500);
@@ -201,6 +221,11 @@ ipcMain.on('logout', (event, input) =>{
 ipcMain.on("quit",()=>{ app.quit(); });
 
 process.on("unhandledRejection", (err: Error)=>{
+    if(reconnect) {
+        console.log(`Discord not found, reconnect attempt ${reconnectAttempts}`);
+        reconnectAttempts++;
+        return setTimeout(()=>{rpcController(new Client({transport: "ipc"}))},5000);
+    }
     if(err.message === "RPC_CONNECTION_TIMEOUT"){
         console.log("It would seem your Discord is out of sync with the application. Please reload Discord with CTRL+R.");
         dialog.showErrorBox("RPC_CONNECTION_TIMEOUT","It would seem your Discord is out of sync with the application. Please reload Discord with CTRL+R.");
