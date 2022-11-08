@@ -64,16 +64,16 @@ function toggleShowing(){
         });
     } else {
         gameDiv.style.display = "inline-block";
-        for(let i = 0; i < 5; i++){
+        for(let i = 1; i < 6; i++){
             timeouts.push(
                 setTimeout(()=>{
-                    subItemsArr[i].animate([
+                    subItemsArr[i-1].animate([
                         { opacity: '0'},
                         { opacity: '1'}
                     ],{
                         duration: 250, fill: "forwards"
                     });
-                },i === 2 ? 80*i : 80)
+                },i === 3 ? 80*2 : 80*i)
             );
         }
     }
@@ -102,6 +102,9 @@ logoutBtn.onclick = ()=>{ ipcRenderer.send("quit",true); }
 
 startbutton.onclick = () =>{
     if(!inApp){
+        if(showingGames){
+            toggleShowing();
+        }
         ipcRenderer.send("gameChange",tempID);
         startbutton.innerText = "Connecting...";
         startbutton.disabled = true;

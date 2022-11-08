@@ -1,7 +1,7 @@
 {
   "name": "nervegear",
   "productName": "Nervegear",
-  "version": "2.2.9c",
+  "version": "2.3.0a",
   "description": "Small Discord RPC application which parodies Sword Art Online.",
   "main": "./built/main.js",
   "scripts": {
