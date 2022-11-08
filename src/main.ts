@@ -9,7 +9,7 @@ const rpc = new Client({transport: "ipc"});
 let startTime, confirm = 0, currentStatus;
 
 const productName = "Nervegear";
-const version = "2.2.9c";
+const version = "2.2.11a";
 
 const dev = process.argv[2] ?? false;
 
