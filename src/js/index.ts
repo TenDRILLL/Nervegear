@@ -1,5 +1,3 @@
-//TODO: Investigate why clicking doesn't work.
-//Most likely due to as HTMLButtonElement.
 import { remote, ipcRenderer, shell } from "electron";
 const { app } = remote;
 
@@ -10,8 +8,8 @@ const gameDiv = document.getElementById("subItemsDiv") as HTMLElement;
 const gameNameField = document.getElementById("gameName") as HTMLElement;
 const alertOk = document.getElementById("alert-ok") as HTMLButtonElement;
 const alertCancel = document.getElementById("alert-cancel") as HTMLButtonElement;
-const rpcTxt1 = document.getElementById("gameTxt-1") as HTMLElement;
-const rpcTxt2 = document.getElementById("gameTxt-2") as HTMLElement;
+const rpcTxt1 = document.getElementById("gameTxt-1") as HTMLInputElement;
+const rpcTxt2 = document.getElementById("gameTxt-2") as HTMLInputElement;
 const subItemsArr = [
     document.getElementById("0") as HTMLElement,
     document.getElementById("1") as HTMLElement,
@@ -24,6 +22,17 @@ let timeouts: Array<NodeJS.Timeout> = [], inApp = false, tempID = 0, game, showi
 document.title = `${app.name} ${app.getVersion()}`;
 
 selected(0,"Choose game");
+
+selectbutton.onclick = () => {
+    if(!inApp) {
+        toggleShowing();
+    } else {
+        ipcRenderer.send("updateRPC",{
+            details: rpcTxt1.value,
+            state: rpcTxt2.value
+        });
+    }
+}
 
 function selected(id,gameName){
     selectbutton.innerText = gameName;
