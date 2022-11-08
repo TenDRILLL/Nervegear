@@ -102,6 +102,9 @@ logoutBtn.onclick = ()=>{ ipcRenderer.send("quit",true); }
 
 startbutton.onclick = () =>{
     if(!inApp){
+        if(showingGames){
+            toggleShowing();
+        }
         ipcRenderer.send("gameChange",tempID);
         startbutton.innerText = "Connecting...";
         startbutton.disabled = true;
