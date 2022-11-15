@@ -10,7 +10,7 @@ let startTime, currentStatus, reconnectAttempts = 0;
 let reconnect: boolean = false;
 
 const productName = "Nervegear";
-const version = "2.3.0a";
+const version = "2.3.0b";
 
 const dev = process.argv[2] ?? false;
 
