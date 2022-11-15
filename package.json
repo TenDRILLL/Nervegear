@@ -1,11 +1,11 @@
 {
   "name": "nervegear",
   "productName": "Nervegear",
-  "version": "2.3.0a",
+  "version": "2.3.0b",
   "description": "Small Discord RPC application which parodies Sword Art Online.",
   "main": "./built/main.js",
   "scripts": {
-    "build": "rimraf ./built && tsc --build && copyfiles -u 1 src/html/* src/images/* src/other/* built",
+    "build": "rimraf ./built && tsc --build && copyfiles -u 1 src/html/* src/images/* src/other/* src/nvg.ico built",
     "buildrun": "npm run build && npm run run",
     "run": "electron . true",
     "dist": "electron-builder"
