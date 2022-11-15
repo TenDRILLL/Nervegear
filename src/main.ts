@@ -34,6 +34,7 @@ function rpcController(rpc2){
         console.log("Connected to Discord.");
         reconnectAttempts = 0;
         reconnect = false;
+        startTime = Date.now();
         if(currentStatus !== null){
             rpc.setActivity(currentStatus);
         } else {
@@ -155,6 +156,7 @@ function checkForUpdates(window,init){
 }
 
 function trayCreator(window){
+    console.log(__dirname);
     let tray = new Tray(`${__dirname}/nvg.ico`);
     tray.setContextMenu(Menu.buildFromTemplate([
         {label: "(Re)open app", click: ()=>{window.show(); tray.destroy();}},
